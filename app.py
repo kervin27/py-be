@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flasgger import Swagger
 from db import get_db_connection
+import os
+
 
 app = Flask(__name__)
 CORS(app)
@@ -132,5 +134,6 @@ def elimina_utente(id):
     return jsonify({'message': 'Utente eliminato con successo'})
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))  # Railway assegna una porta dinamica
+    app.run(host="0.0.0.0", port=port, debug=True)
