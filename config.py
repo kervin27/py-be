@@ -1,10 +1,10 @@
-#Contiene la configurazione del database:
+import os
 
-# config.py
-DB_CONFIG = {
-    'host': 'mysql.railway.internal',
-    'user': 'root',            # il tuo utente MySQL
-    'password': 'ZmsTdyulFNcmvtoCTHWHhQndsWvutlos',  # la password che usi in Workbench
-    'database': 'railway',   # il nome del tuo database
-    'port': 3306                 # la porta (di default 3306)
-}
+# -----------------------------
+# Configurazione variabili d'ambiente
+# -----------------------------
+DB_HOST = os.getenv("MYSQLHOST")
+DB_USER = os.getenv("MYSQLUSER")
+DB_PASSWORD = os.getenv("MYSQLPASSWORD")
+DB_NAME = os.getenv("MYSQLDATABASE")
+DB_PORT = int(os.getenv("MYSQLPORT", 3306))

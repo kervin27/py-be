@@ -1,134 +1,36 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS
-from flasgger import Swagger
-from db import get_db_connection
+from db import create_table, aggiungi_utente, leggi_utenti
 import os
 
+# -----------------------------
+# Creazione tabella (all'avvio)
+# -----------------------------
+create_table()
 
+# -----------------------------
+# Flask API
+# -----------------------------
 app = Flask(__name__)
-CORS(app)
-swagger = Swagger(app)
 
-
-@app.route('/utenti', methods=['POST'])
+@app.route("/utente", methods=["POST"])
 def crea_utente():
-    """
-    Crea un nuovo utente
-    ---
-    tags:
-      - Utenti
-    parameters:
-      - name: body
-        in: body
-        required: true
-        schema:
-          type: object
-          required:
-            - nome
-            - email
-          properties:
-            nome:
-              type: string
-            email:
-              type: string
-    responses:
-      201:
-        description: Utente creato con successo
-    """
     data = request.get_json()
-    nome = data.get('nome')
-    email = data.get('email')
+    nome = data.get("nome")
+    email = data.get("email")
+    if not nome or not email:
+        return jsonify({"error": "nome e email obbligatori"}), 400
+    success, message = aggiungi_utente(nome, email)
+    status = 201 if success else 400
+    return jsonify({"message": message}), status
 
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO utenti (nome, email) VALUES (%s, %s)", (nome, email))
-    conn.commit()
-    cursor.close()
-    conn.close()
-    return jsonify({'message': 'Utente creato con successo'}), 201
+@app.route("/utenti", methods=["GET"])
+def ottieni_utenti():
+    utenti = leggi_utenti()
+    return jsonify([{"id": u[0], "nome": u[1], "email": u[2]} for u in utenti])
 
-
-@app.route('/utenti', methods=['GET'])
-def lista_utenti():
-    """
-    Restituisce la lista di tutti gli utenti
-    ---
-    tags:
-      - Utenti
-    responses:
-      200:
-        description: Lista utenti
-    """
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM utenti")
-    utenti = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return jsonify(utenti)
-
-
-@app.route('/utenti/<int:id>', methods=['PUT'])
-def aggiorna_utente(id):
-    """
-    Aggiorna un utente esistente
-    ---
-    tags:
-      - Utenti
-    parameters:
-      - name: id
-        in: path
-        type: integer
-        required: true
-        description: ID dell'utente
-      - name: body
-        in: body
-        required: true
-        schema:
-          type: object
-          properties:
-            nome:
-              type: string
-            email:
-              type: string
-    responses:
-      200:
-        description: Utente aggiornato con successo
-    """
-    data = request.get_json()
-    nome = data.get('nome')
-    email = data.get('email')
-
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("UPDATE utenti SET nome=%s, email=%s WHERE id=%s", (nome, email, id))
-    conn.commit()
-    cursor.close()
-    conn.close()
-    return jsonify({'message': 'Utente aggiornato con successo'})
-
-
-@app.route('/utenti/<int:id>', methods=['DELETE'])
-def elimina_utente(id):
-    """
-    Elimina un utente
-    ---
-    tags:
-      - Utenti
-    parameters:
-      - name: id
-        in: path
-        type: integer
-        required: true
-        description: ID dell'utente da eliminare
-    responses:
-      200:
-        description: Utente eliminato con successo
-    """
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM utenti WHERE id=%s", (id,))
-    conn.commit()
-    cursor.close()
-    conn.close()
-    return jsonify({'message': 'Utente eliminato con successo'})
+# -----------------------------
+# Avvio Flask
+# -----------------------------
+if __name__ == "__main__":
+    port = int(os.getenv("PORT", 8000))
+    app.run(host="0.0.0.0", port=port)
