@@ -1,8 +1,6 @@
 import os
 
-# -----------------------------
-# Configurazione variabili d'ambiente
-# -----------------------------
+# Configurazione variabili d’ambiente per Railway
 DB_HOST = os.getenv("MYSQLHOST")
 DB_USER = os.getenv("MYSQLUSER")
 DB_PASSWORD = os.getenv("MYSQLPASSWORD")
