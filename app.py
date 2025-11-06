@@ -132,10 +132,3 @@ def elimina_utente(id):
     cursor.close()
     conn.close()
     return jsonify({'message': 'Utente eliminato con successo'})
-
-
-if __name__ == '__main__':
-    # Ottieni la porta dalla variabile d'ambiente PORT (fornita da Railway),
-    # altrimenti usa 5000 (o 8080) come default per il testing locale.
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
