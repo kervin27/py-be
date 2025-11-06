@@ -9,11 +9,11 @@ def get_db_connection():
     # 1. Leggi le credenziali direttamente dalle variabili d'ambiente di Railway.
     #    Controlla la dashboard di Railway per i nomi esatti delle variabili (es. MYSQL_HOST vs DB_HOST).
     
-    DB_HOST = os.environ.get('MYSQL_HOST') 
-    DB_USER = os.environ.get('MYSQL_USER')
-    DB_PASSWORD = os.environ.get('MYSQL_PASSWORD')
-    DB_NAME = os.environ.get('MYSQL_DATABASE')
-    DB_PORT = os.environ.get('MYSQL_PORT', 3306) # Usa 3306 come default se non specificato
+    DB_HOST = os.environ.get('MYSQLHOST') 
+    DB_USER = os.environ.get('MYSQLUSER')
+    DB_PASSWORD = os.environ.get('MYSQLPASSWORD')
+    DB_NAME = os.environ.get('MYSQLDATABASE')
+    DB_PORT = os.environ.get('MYSQLPORT', 3306) # Usa 3306 come default se non specificato
 
     # 2. Connetti usando i valori letti
     try:
