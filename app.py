@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from db import create_table, aggiungi_utente, leggi_utenti, aggiorna_utente, elimina_utente
 import os
 
 app = Flask(__name__)
+CORS(app)
 
 create_table()
 
