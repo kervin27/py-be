@@ -86,3 +86,11 @@ def elimina_utente(user_id):
     finally:
         cursor.close()
         conn.close()
+
+#def salva(user_id):
+    #conn = create_connection()
+    #if not conn:
+        #return False, "Connessione al DB fallita"
+    #cursor = conn.cursor()
+    #try:
+        #if 
