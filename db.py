@@ -81,8 +81,24 @@ def elimina_utente(user_id):
         cursor.execute("DELETE FROM utenti WHERE id=%s", (user_id,))
         conn.commit()
         return True, "Utente eliminato!"
-    except Error as e:
+    except Error as e: 
         return False, str(e)
+    finally:
+        cursor.close()
+        conn.close()
+
+def salva(user_id):
+    conn = create_connection()
+    if not conn:
+        return False, "Connessione al DB fallita"
+    cursor = conn.cursor()
+    try:
+        cursor.execute("select * from utenti where id = :p_id",(user_id))
+        res =cursor.fetachall()
+        for row in res:
+            user_id  = row[0]
+            nome     = row[1]
+            email    = row[2]
     finally:
         cursor.close()
         conn.close()
