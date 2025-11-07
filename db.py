@@ -20,18 +20,19 @@ def create_table():  # definisce funzione per creare la tabella se non esiste
     conn = create_connection()  # crea o ottiene la connessione al DB
     if conn:  # controlla che la connessione sia valida
         cursor = conn.cursor()  # crea un cursore per eseguire comandi SQL
-        cursor.execute("CREATE TABLE IF NOT EXISTS utenti (id INT AUTO_INCREMENT PRIMARY KEY, nome VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL UNIQUE);")  # esegue comando SQL per creare la tabella utenti se non esiste
+        # sostituisce 'nome' con 'username' e aggiunge 'password'
+        cursor.execute("CREATE TABLE IF NOT EXISTS utenti (id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL);")  # esegue comando SQL per creare la tabella utenti se non esiste
         conn.commit()  # applica le modifiche al DB
         cursor.close()  # chiude il cursore
         conn.close()  # chiude la connessione
 
-def aggiungi_utente(nome, email):  # funzione per inserire un nuovo utente
+def aggiungi_utente(username, email, password):  # funzione per inserire un nuovo utente
     conn = create_connection()  # apre la connessione al DB
     if not conn:  # verifica se la connessione è fallita
         return False, "Connessione al DB fallita"  # ritorna errore se connessione non valida
     cursor = conn.cursor()  # crea un cursore per eseguire l'INSERT
     try:  # blocco try per gestire errori durante l'INSERT
-        cursor.execute("INSERT INTO utenti (nome, email) VALUES (%s, %s)", (nome, email))  # esegue l'INSERT con parametri per evitare SQL injection
+        cursor.execute("INSERT INTO utenti (username, email, password) VALUES (%s, %s, %s)", (username, email, password))  # esegue l'INSERT con parametri per evitare SQL injection
         conn.commit()  # applica la transazione
         return True, "Utente aggiunto!"  # ritorna successo e messaggio
     except Error as e:  # cattura errori di tipo Error
@@ -45,19 +46,20 @@ def leggi_utenti():  # funzione per leggere tutti gli utenti
     if not conn:  # se la connessione fallisce
         return []  # ritorna lista vuota
     cursor = conn.cursor()  # crea un cursore per la SELECT
-    cursor.execute("SELECT * FROM utenti")  # esegue la query per ottenere tutti gli utenti
+    # non selezionare la password nella lista utenti
+    cursor.execute("SELECT id, username, email FROM utenti")  # esegue la query per ottenere tutti gli utenti
     results = cursor.fetchall()  # preleva tutti i risultati della query
     cursor.close()  # chiude il cursore
     conn.close()  # chiude la connessione
     return results  # ritorna i risultati letti dal DB
 
-def aggiorna_utente(user_id, nome, email):  # funzione per aggiornare un utente esistente
+def aggiorna_utente(user_id, username, email, password):  # funzione per aggiornare un utente esistente
     conn = create_connection()  # apre la connessione al DB
     if not conn:  # se la connessione fallisce
         return False, "Connessione al DB fallita"  # ritorna errore
     cursor = conn.cursor()  # crea un cursore per l'UPDATE
     try:  # blocco try per gestire errori
-        cursor.execute("UPDATE utenti SET nome=%s, email=%s WHERE id=%s", (nome, email, user_id))  # esegue l'UPDATE con parametri
+        cursor.execute("UPDATE utenti SET username=%s, email=%s, password=%s WHERE id=%s", (username, email, password, user_id))  # esegue l'UPDATE con parametri
         conn.commit()  # applica la transazione
         return True, "Utente aggiornato!"  # ritorna successo e messaggio
     except Error as e:  # cattura errori
