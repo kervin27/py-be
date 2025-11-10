@@ -1,16 +1,24 @@
 from flask import Flask, request, jsonify  # importa Flask per l'app, request per leggere richieste e jsonify per risposte JSON
 from flask_cors import CORS  # importa CORS per abilitare le richieste cross-origin
-from flasgger import Swagger  # importa Swagger per la documentazione API
+
 import os
 
+from src.api.user_routes import user_bp
 from src.services.user_services import create_table  # importa il modulo os per leggere variabili d'ambiente
-
+from flasgger import Swagger
 app = Flask(__name__)  # crea l'istanza dell'app Flask usando il nome del modulo corrente
 CORS(app)  # abilita CORS sull'app per permettere chiamate da browser di altri domini
+
+
+# registrazione diretta dell'endpoint
+create_table()  # crea la tabella nel DB all'avvio se non esiste
+
+# registra blueprint
+app.register_blueprint(user_bp)
+
+
 swagger = Swagger(app)
 
-
-create_table()  # crea la tabella nel DB all'avvio se non esiste
 
 @app.route("/")  # definisce la route radice dell'API (GET di default)
 def home():  # funzione che gestisce la route radice
