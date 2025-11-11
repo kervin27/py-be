@@ -22,7 +22,7 @@ def crea_utente():
 
 def ottieni_utenti():
     utenti = get_utenti() # Chiama il service per ottenere gli utenti
-    return jsonify([{"id": u[0], "username": u[1], "email": u[2]} for u in utenti])
+    return jsonify(utenti),200
 
 
 
