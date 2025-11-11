@@ -1,12 +1,15 @@
 # src/api/user_routes.py (ESEMPIO)
 
 from flask import Blueprint, request, jsonify
+from src.docs.user_doc import doc_ottieni_utenti
 from src.services.user_services import aggiorna_dati_utente, elimina_utente_by_id,crea_nuovo_utente, get_utenti
+from flasgger import swag_from
 
 # Crea un Blueprint per raggruppare le rotte utente
 user_bp = Blueprint('users', __name__, url_prefix='/utenti')
 
 @user_bp.route("", methods=["GET"])
+@swag_from(doc_ottieni_utenti())
 def ottieni_utenti():
     utenti = get_utenti() # Chiama il service per ottenere gli utenti
     return jsonify(utenti),200
