@@ -6,7 +6,13 @@ from src.services.user_services import aggiorna_dati_utente, elimina_utente_by_i
 # Crea un Blueprint per raggruppare le rotte utente
 user_bp = Blueprint('users', __name__, url_prefix='/utenti')
 
-@user_bp.route("/", methods=["POST"])
+@user_bp.route("", methods=["GET"])
+def ottieni_utenti():
+    utenti = get_utenti() # Chiama il service per ottenere gli utenti
+    return jsonify(utenti),200
+
+
+@user_bp.route("", methods=["POST"])
 def crea_utente():
     data = request.get_json()
     username = data.get("username")
@@ -17,13 +23,6 @@ def crea_utente():
     success, msg = crea_nuovo_utente(username, email, password) 
     
     return jsonify({"message": msg}), 201 if success else 400
-
-@user_bp.route("/", methods=["GET"])
-
-def ottieni_utenti():
-    utenti = get_utenti() # Chiama il service per ottenere gli utenti
-    return jsonify(utenti),200
-
 
 
 @user_bp.route("/<int:user_id>", methods=["PUT"])  # definisce la route per aggiornare un utente identificato da user_id con metodo PUT
