@@ -26,7 +26,7 @@ def ottieni_utenti():
 
 
 
-@user_bp.route("/utenti/<int:user_id>", methods=["PUT"])  # definisce la route per aggiornare un utente identificato da user_id con metodo PUT
+@user_bp.route("/<int:user_id>", methods=["PUT"])  # definisce la route per aggiornare un utente identificato da user_id con metodo PUT
 def aggiorna(user_id):  # funzione che gestisce l'aggiornamento dell'utente; riceve user_id dalla route
     data = request.get_json()  # legge il corpo della richiesta come JSON
     username = data.get("username")  # estrae il nuovo username (se presente)
@@ -35,7 +35,7 @@ def aggiorna(user_id):  # funzione che gestisce l'aggiornamento dell'utente; ric
     success, msg = aggiorna_dati_utente(user_id, username, email, password)  # chiama la funzione che aggiorna il DB
     return jsonify({"message": msg}), 200 if success else 400  # ritorna 200 se aggiornamento avvenuto, altrimenti 400
 
-@user_bp.route("/utenti/<int:user_id>", methods=["DELETE"])  # definisce la route per eliminare un utente identificato da user_id con metodo DELETE
+@user_bp.route("/<int:user_id>", methods=["DELETE"])  # definisce la route per eliminare un utente identificato da user_id con metodo DELETE
 def elimina(user_id):  # funzione che gestisce l'eliminazione; riceve user_id dalla route
     success, msg = elimina_utente_by_id(user_id)  # chiama la funzione che elimina l'utente dal DB
     return jsonify({"message": msg}), 200 if success else 400  # ritorna 200 se eliminazione avvenuta, altrimenti 400
