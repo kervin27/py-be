@@ -14,8 +14,8 @@ if ENV == "production":
     DB_NAME = os.getenv("MYSQLDATABASE")
     DB_PORT = int(os.getenv("MYSQLPORT", 3306))
 else:  # locale
-    DB_HOST = os.getenv("LOCAL_DB_HOST", "127.0.0.1")
-    DB_USER = os.getenv("LOCAL_DB_USER", "habado_user")
-    DB_PASSWORD = os.getenv("LOCAL_DB_PASSWORD", "root")
-    DB_NAME = os.getenv("LOCAL_DB_NAME", "habado_local_db")
-    DB_PORT = int(os.getenv("LOCAL_DB_PORT", 3307))
+    DB_HOST = os.getenv("LOCAL_DB_HOST")
+    DB_USER = os.getenv("LOCAL_DB_USER")
+    DB_PASSWORD = os.getenv("LOCAL_DB_PASSWORD")
+    DB_NAME = os.getenv("LOCAL_DB_NAME")
+    DB_PORT = int(os.getenv("LOCAL_DB_PORT"))
