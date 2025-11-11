@@ -46,8 +46,7 @@ def crea_nuovo_utente(username: str, email: str, password: str) -> tuple[bool, s
     Gestisce la logica di business e delega l'inserimento al Repository.
     """
     
-    conn = create_connection() 
-    cursor = conn.cursor()  # crea un cursore per eseguire comandi SQL
+   
     # 1. LOGICA DI BUSINESS/VALIDAZIONE (dovrebbe avvenire qui!)
     if not username or not email or not password:
         return False, "username, email e password obbligatori"
@@ -56,10 +55,7 @@ def crea_nuovo_utente(username: str, email: str, password: str) -> tuple[bool, s
     if "@" not in email or "." not in email:
         return False, "Formato email non valido."
         
-  # verifica se l'utente esiste già
-    cursor.execute("SELECT id FROM utenti WHERE email = ?", (email,))
-    if cursor.fetchone():
-        return False, "Utente già esistente"
+
 
     # ESEMPIO: Preparazione/Trasformazione dei dati (Cruciale!)
     # **IMPORTANTE:** Qui dovresti hashare la password prima di inviarla al DB!
