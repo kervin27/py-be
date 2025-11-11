@@ -5,19 +5,6 @@ from db import create_connection
 from src.db_access.user_db import add_user, delete_user, get_all_users_from_db, update_user  # importa le variabili di configurazione DB
 
 
-def create_table():  # definisce funzione per creare la tabella se non esiste
-    conn = create_connection()  # crea o ottiene la connessione al DB
-    if conn:  # controlla che la connessione sia valida
-        cursor = conn.cursor()  # crea un cursore per eseguire comandi SQL
-        # sostituisce 'nome' con 'username' e aggiunge 'password'
-        cursor.execute("CREATE TABLE IF NOT EXISTS utenti (id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL);")  # esegue comando SQL per creare la tabella utenti se non esiste
-        conn.commit()  # applica le modifiche al DB
-        cursor.close()  # chiude il cursore
-        conn.close()  # chiude la connessione
-
-
-##################
-
 
 def get_utenti():
     """Recupera gli utenti dal repository e li formatta per l'API."""

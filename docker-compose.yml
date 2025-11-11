@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8.1
+    container_name: mysql_dev
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: habado_local_db
+      MYSQL_USER: habado_user
+      MYSQL_PASSWORD: root
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - dev_network
+
+  app:
+    build: . # costruisce l'immagine usando il Dockerfile nella root
+    container_name: python_app
+    restart: always
+    volumes:
+      - .:/app # monta la root locale dentro il container
+    depends_on:
+      - mysql # aspetta che MySQL sia pronto
+    ports:
+      - "8000:8000" # porta della tua app Python, cambia se necessario
+    networks:
+      - dev_network
+
+volumes:
+  mysql_data:
+
+networks:
+  dev_network:
+    driver: bridge
