@@ -194,7 +194,11 @@ def doc_login_utente():
             "200": {
                 "description": "Login riuscito",
                 "examples": {
-                    "application/json": {"access_token": "jwt_token_here", "token_type": "bearer"}
+                    "application/json": {"access_token": "jwt_token_here", "token_type": "bearer", "user": {
+                    "email": "pippo@example.com",
+                    "id": 2,
+                    "username": "pippo"
+                 }}
                 }
             },
             "401": {

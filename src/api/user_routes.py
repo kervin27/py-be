@@ -26,8 +26,7 @@ def crea_utente():  # funzione che crea un nuovo utente
     data = request.get_json()  # legge il JSON dal corpo della richiesta
     username = data.get("username")  # estrae il campo username
     email = data.get("email")  # estrae il campo email
-    password = data.get("password")  # estrae il campo password
-    success, msg = crea_nuovo_utente(username, email, password)  # chiama il service per creare l'utente
+    success, msg = crea_nuovo_utente(username, email)  # chiama il service per creare l'utente
     return jsonify({"message": msg}), 201 if success else 400  # ritorna 201 se successo, altrimenti 400
 
 @user_bp.route("/<int:user_id>", methods=["PUT"])  # rotta PUT /utenti/<user_id>
@@ -36,8 +35,7 @@ def aggiorna(user_id):  # funzione che aggiorna un utente
     data = request.get_json()  # legge il JSON dal corpo della richiesta
     username = data.get("username")  # estrae il nuovo username
     email = data.get("email")  # estrae la nuova email
-    password = data.get("password")  # estrae la nuova password
-    success, msg = aggiorna_dati_utente(user_id, username, email, password)  # chiama il service per aggiornare
+    success, msg = aggiorna_dati_utente(user_id, username, email)  # chiama il service per aggiornare
     return jsonify({"message": msg}), 200 if success else 400  # ritorna 200 se successo, altrimenti 400
 
 @user_bp.route("/<int:user_id>", methods=["DELETE"])  # rotta DELETE /utenti/<user_id>

@@ -28,7 +28,7 @@ def get_all_users_from_db():
             cursor.close()
             conn.close()
 
-def add_user(username: str, email: str, password: str) -> tuple[bool, str]:
+def add_user(username: str, email: str) -> tuple[bool, str]:
     """Esegue l'INSERT diretto nel DB e gestisce gli errori a livello di DB."""
     
     conn = create_connection()
@@ -39,8 +39,8 @@ def add_user(username: str, email: str, password: str) -> tuple[bool, str]:
     cursor = conn.cursor()
     try:
         # La logica di INSERT rimane qui, con l'uso di parametri (%s)
-        query = "INSERT INTO utenti (username, email, password) VALUES (%s, %s, %s)"
-        cursor.execute(query, (username, email, password))
+        query = "INSERT INTO utenti (username, email) VALUES (%s, %s)"
+        cursor.execute(query, (username, email))
         conn.commit()
         
         return True, "Utente creato con successo nel database."

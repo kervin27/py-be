@@ -1,7 +1,4 @@
-import mysql.connector  # importa il connettore MySQL per Python
-from mysql.connector import Error  # importa l'eccezione Error dal connettore
-from config import DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT
-from db import create_connection
+
 from src.db_access.user_db import add_user, delete_user, get_all_users_from_db, update_user  # importa le variabili di configurazione DB
 
 
@@ -28,15 +25,15 @@ def get_utenti():
 
 
 
-def crea_nuovo_utente(username: str, email: str, password: str) -> tuple[bool, str]:
+def crea_nuovo_utente(username: str, email: str, ) -> tuple[bool, str]:
     """
     Gestisce la logica di business e delega l'inserimento al Repository.
     """
     
    
     # 1. LOGICA DI BUSINESS/VALIDAZIONE (dovrebbe avvenire qui!)
-    if not username or not email or not password:
-        return False, "username, email e password obbligatori"
+    if not username or not email :
+        return False, "username e email obbligatori"
         
     # ESEMPIO: Aggiunta di logica di validazione mancante
     if "@" not in email or "." not in email:
@@ -44,13 +41,9 @@ def crea_nuovo_utente(username: str, email: str, password: str) -> tuple[bool, s
         
 
 
-    # ESEMPIO: Preparazione/Trasformazione dei dati (Cruciale!)
-    # **IMPORTANTE:** Qui dovresti hashare la password prima di inviarla al DB!
-    # hashed_password = hash_password_function(password) 
-    hashed_password = password # Per ora usiamo quella non hashata, ma andrebbe sistemato!
     
     # 2. Chiama il Repository con i dati puliti e pronti
-    success, msg = add_user(username, email, hashed_password)
+    success, msg = add_user(username, email)
     
     # 3. Restituisce il risultato finale all'API
     if success:
@@ -59,7 +52,7 @@ def crea_nuovo_utente(username: str, email: str, password: str) -> tuple[bool, s
         # Passa il messaggio di errore DB (es. email già esistente)
         return False, msg
 
-def aggiorna_dati_utente(user_id: int, username: str = None, email: str = None, password: str = None) -> tuple[bool, str]:
+def aggiorna_dati_utente(user_id: int, username: str = None, email: str = None) -> tuple[bool, str]:
     """
     Gestisce la logica di business e prepara i dati per l'aggiornamento.
     """
@@ -74,11 +67,6 @@ def aggiorna_dati_utente(user_id: int, username: str = None, email: str = None, 
     if email:
         # LOGICA DI VALIDAZIONE EMAIL: qui puoi verificare il formato dell'email.
         updates['email'] = email
-        
-    if password:
-        # LOGICA CRUCIALE DI BUSINESS: Hashing della password prima dell'aggiornamento!
-        # hashed_password = hash_password_function(password) 
-        updates['password'] = password # SOSTITUIRE con l'hash
 
     if not updates:
         return False, "Nessun dato valido fornito per l'aggiornamento."
