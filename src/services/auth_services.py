@@ -11,10 +11,10 @@ MAX_PASSWORD_LENGTH = 72  # limite massimo per bcrypt
 def hash_password(password: str) -> str:
     """Crea l'hash della password (bcrypt accetta max 72 byte)."""
     if not password:
-        abort(400, "La password è obbligatoria")
+        return False, "La password è obbligatoria"
 
     if len(password) > MAX_PASSWORD_LENGTH:
-        abort(400, f"La password non può superare {MAX_PASSWORD_LENGTH} caratteri")
+        return False, f"La password non può superare {MAX_PASSWORD_LENGTH} caratteri"
 
     return pwd_context.hash(password)
 
@@ -32,7 +32,7 @@ def create_access_token(data: dict, expires_delta: timedelta = None) -> str:
     """Crea un token JWT firmato con scadenza."""
     to_encode = data.copy()
     if "sub" not in to_encode:
-        abort(400, "Il token deve contenere la chiave 'sub'")
+        return False, "Il token deve contenere la chiave 'sub'"
 
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
@@ -61,11 +61,11 @@ def authenticate_user(username: str, password: str):
 def register_user(username: str, email: str, password: str):
     user_exists, _ = get_user_by_username(username)
     if user_exists:
-        abort(400, "Username già registrato")
+        return False, "Username già registrato"
 
     email_exists, _ = get_user_by_email(email)
     if email_exists:
-        abort(400, "Email già registrata")
+        return False, "Email già registrata"
 
     hashed_pw = hash_password(password)
     success, result = create_user(username, email, hashed_pw)

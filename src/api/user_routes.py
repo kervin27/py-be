@@ -15,7 +15,7 @@ def ottieni_utenti():  # funzione che restituisce la lista degli utenti
 
     current_user = get_current_user()
     if not current_user:
-        return jsonify({"error": "Token mancante o non valido"}), 401
+        return jsonify({"message": "Token mancante o non valido"}), 401
 
     utenti = get_utenti()  # chiama il service per ottenere gli utenti
     return jsonify(utenti), 200  # ritorna la lista in JSON con status 200

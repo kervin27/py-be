@@ -24,10 +24,10 @@ def register():
     password = data.get("password")
 
     if not username or not email or not password:
-        return jsonify({"error": "Missing fields"}), 400
+        return jsonify({"message": "Missing fields"}), 400
 
-    user = register_user(username, email, password)
-    return jsonify(user), 201
+    success, msg = register_user(username, email, password)
+    return jsonify({"message": msg}), 200 if success else 400  # ritorna 200 se successo, altrimenti 400
 
 # Login
 @auth_bp.route("/login", methods=["POST"])
@@ -38,11 +38,11 @@ def login():
     password = data.get("password")
 
     if not username or not password:
-        return jsonify({"error": "Missing username or password"}), 400
+        return jsonify({"message": "Missing username or password"}), 400
 
     user = authenticate_user(username, password)
     if not user:
-        return jsonify({"error": "Username o password non corretti"}), 401
+        return jsonify({"message": "Username o password non corretti"}), 401
 
     # user è un dict, quindi accesso tramite chiave
     token = create_access_token(data={"sub": user["username"]})
@@ -65,5 +65,5 @@ def login():
 def protected_route():
     current_user = get_current_user()
     if not current_user:
-        return jsonify({"error": "Token mancante o non valido"}), 401
+        return jsonify({"message": "Token mancante o non valido"}), 401
     return jsonify({"message": f"Ciao {current_user}, sei autenticato!"})
